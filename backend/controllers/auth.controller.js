@@ -16,6 +16,30 @@ module.exports.signUp = async (req, res) => {
   console.log(req.body);
   let { pseudo, email, password } = req.body;
 
+  let reg = new RegExp(/\s/g, "g");
+  password = password.replace(reg, "");
+  reg = new RegExp(
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+    "i"
+  );
+  email_pass = reg.test(email);
+  if (!email_pass) {
+    console.log("ien");
+    return res.status(200).json({
+      pseudo: "",
+      email: "Format email incorrect",
+      password: "",
+      errors: "Erreur",
+    });
+  }
+  if (password === "") {
+    return res.status(200).json({
+      pseudo: "",
+      email: "",
+      password: "Veuillez entrer un mot de passe",
+      errors: "Erreur",
+    });
+  }
   bcrypt.genSalt(10, (err, salt) => {
     if (err) return res.status(500).json(err);
     bcrypt.hash(password, salt, (errors, hash) => {
@@ -74,19 +98,35 @@ module.exports.signUp = async (req, res) => {
 
 module.exports.signIn = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email);
+  if (password === "") {
+    return res.status(200).json({
+      pseudo: "",
+      email: "",
+      password: "Veuillez entrer un mot de passe",
+      errors: "Erreur",
+    });
+  }
   let sql = `SELECT * FROM users WHERE email= ${connection.escape(email)}`;
   connection.query(sql, (err, result, fields) => {
     if (err) return res.status(500).json(err);
-    if (!result) return res.status(404).json(result);
-    console.log(result[0].password);
+    if (!result[0]) {
+      return res.status(200).json({
+        email: "Email incorrect",
+        password: "",
+        errors: "Erreur",
+      });
+    }
     bcrypt.compare(password, result[0].password, (errors, results) => {
       if (results) {
         const token = createToken(result[0].id);
         res.cookie("jwt", token, { httpOnly: true, maxAge });
         return res.status(200).json({ user: result[0].id });
       }
-      return res.status(403).json(results);
+      return res.status(200).json({
+        email: "",
+        password: "Mot de passe incorrect",
+        errors: "Erreur",
+      });
     });
   });
 };

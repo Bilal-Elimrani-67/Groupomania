@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addComment, getPosts } from "../../actions/post.actions";
-import FollowHandler from "../Profil/FollowHandler";
+
 import { isEmpty, timestampParser } from "../Utils";
 import EditDeleteComment from "./EditDeleteComment";
 
@@ -54,9 +54,6 @@ const CardComments = ({ post }) => {
               <div className="comment-header">
                 <div className="pseudo">
                   <h3>{comment.pseudo}</h3>
-                  {comment.author !== userData.id && (
-                    <FollowHandler idToFollow={comment.author} type={"card"} />
-                  )}
                 </div>
                 <span>{timestampParser(comment.created_at)}</span>
               </div>

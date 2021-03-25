@@ -33,7 +33,14 @@ const Card = ({ post }) => {
       ) : (
         <>
           <div className="card-left">
-            <img src={post.profil_pic} alt="poster-pic" />
+            <img
+              src={
+                post.profil_pic
+                  ? post.profil_pic
+                  : "./uploads/profil/random-user.png"
+              }
+              alt="poster-pic"
+            />
           </div>
           <div className="card-right">
             <div className="card-header">

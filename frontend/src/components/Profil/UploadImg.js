@@ -9,6 +9,7 @@ const UploadImg = () => {
 
   const handlePicture = (e) => {
     e.preventDefault();
+
     console.log(userData);
     const data = new FormData();
     data.append("name", userData.pseudo);
@@ -20,7 +21,12 @@ const UploadImg = () => {
   const handleProfil = (e) => {
     e.preventDefault();
 
-    dispatch(deleteProfil(userData.id));
+    let confirm = window.confirm(
+      "Etes-vous sur de vouloir supprimer votre profil"
+    );
+    if (confirm) {
+      dispatch(deleteProfil(userData.id));
+    }
   };
 
   return (
