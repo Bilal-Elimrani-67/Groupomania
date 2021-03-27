@@ -14,22 +14,26 @@ const EditDeleteComment = ({ comment, postId }) => {
     e.preventDefault();
 
     if (text) {
-      dispatch(editComment(postId, comment._id, text));
+      dispatch(editComment(comment.author, comment.id, text));
       setText("");
       setEdit(false);
+      window.location.reload(true);
     }
   };
 
-  const handleDelete = () => dispatch(deleteComment(postId, comment._id));
+  const handleDelete = () => {
+    dispatch(deleteComment(comment.author, comment.id));
+    window.location.reload(true);
+  };
 
   useEffect(() => {
     const checkAuthor = () => {
-      if (uid === comment.commenterId) {
+      if (uid === comment.author) {
         setIsAuthor(true);
       }
     };
     checkAuthor();
-  }, [uid, comment.commenterId]);
+  }, [uid, comment.author]);
 
   return (
     <div className="edit-comment">

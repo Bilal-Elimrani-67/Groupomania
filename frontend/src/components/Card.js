@@ -95,7 +95,6 @@ const Card = ({ post }) => {
                 <span>{post.comments.length}</span>
               </div>
               <LikeButton post={post} />
-              <img src="./img/icons/share.svg" alt="share" />
             </div>
             {showComments && <CardComments post={post} />}
           </div>

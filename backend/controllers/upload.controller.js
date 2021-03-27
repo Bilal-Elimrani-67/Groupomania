@@ -25,9 +25,7 @@ module.exports.uploadProfil = async (req, res) => {
 
   await pipeline(
     req.file.stream,
-    fs.createWriteStream(
-      `${__dirname}/../client/public/uploads/profil/${fileName}`
-    )
+    fs.createWriteStream(`../frontend/public/uploads/profil/${fileName}`)
   );
   console.log(req.body);
   let sql = `UPDATE users SET profil_pic = ${connection.escape(
@@ -37,13 +35,4 @@ module.exports.uploadProfil = async (req, res) => {
     if (errors) return res.status(500).json(errors);
     return res.status(200).json(result);
   });
-  /*await UserModel.findByIdAndUpdate(
-    req.body.userId,
-    { $set: { picture: "./uploads/profil/" + fileName } },
-    { new: true, upsert: true, setDefaultsOnInsert: true },
-    (err, docs) => {
-      if (!err) return res.send(docs);
-      else return res.status(500).send({ message: err });
-    }
-  );*/
 };

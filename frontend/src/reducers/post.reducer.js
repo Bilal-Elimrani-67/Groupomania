@@ -21,13 +21,24 @@ export default function postReducer(state = initialState, action) {
         for (let t = 0; t < posts.length; t++) {
           if (tmp_posts[i].id === posts[t].id) {
             if (tmp_posts[i].comment_id !== null) {
-              posts[t].comments.push({
-                message: tmp_posts[i].comment_message,
-                author: tmp_posts[i].comment_author,
-                id: tmp_posts[i].comment_id,
-                profil_pic: tmp_posts[i].comment_profil_pic,
-                created_at: tmp_posts[i].comment_create_at,
-              });
+              let exist = false;
+              for (let x = 0; x < posts[t].comments.length; x++) {
+                if (tmp_posts[i].comment_id == posts[t].comments[x].id) {
+                  exist = true;
+                  break;
+                }
+              }
+
+              if (!exist) {
+                posts[t].comments.push({
+                  message: tmp_posts[i].comment_message,
+                  author: tmp_posts[i].comment_author,
+                  pseudo: tmp_posts[i].comment_pseudo,
+                  id: tmp_posts[i].comment_id,
+                  profil_pic: tmp_posts[i].comment_profil_pic,
+                  created_at: tmp_posts[i].comment_create_at,
+                });
+              }
             }
             if (tmp_posts[i].like_id !== null) {
               posts[t].likes.push({
@@ -46,6 +57,7 @@ export default function postReducer(state = initialState, action) {
           image: tmp_posts[i].image,
           video: tmp_posts[i].video,
           author: tmp_posts[i].author,
+          pseudo: tmp_posts[i].pseudo,
           created_at: tmp_posts[i].created_at,
           comments: [],
           likes: [],
@@ -55,6 +67,7 @@ export default function postReducer(state = initialState, action) {
           tmp.comments.push({
             message: tmp_posts[i].comment_message,
             author: tmp_posts[i].comment_author,
+            pseudo: tmp_posts[i].comment_pseudo,
             id: tmp_posts[i].comment_id,
             profil_pic: tmp_posts[i].comment_profil_pic,
             created_at: tmp_posts[i].comment_create_at,

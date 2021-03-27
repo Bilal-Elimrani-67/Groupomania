@@ -77,6 +77,7 @@ const SignUpForm = () => {
             id="pseudo"
             onChange={(e) => setPseudo(e.target.value)}
             value={pseudo}
+            required
           />
           <div className="pseudo error"></div>
           <br />
