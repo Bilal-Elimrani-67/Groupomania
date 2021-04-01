@@ -7,7 +7,7 @@ import { isEmpty } from "./Utils";
 const Thread = () => {
   const [loadPost, setLoadPost] = useState(true);
   const [count, setCount] = useState(5);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); //Permet d'envoyer une action
   const posts = useSelector((state) => state.postReducer);
 
   const loadMore = () => {

@@ -5,7 +5,7 @@ import cookie from "js-cookie";
 const Logout = () => {
   const removeCookie = (key) => {
     if (window !== "undefined") {
-      cookie.remove(key, { expires: 1 });
+      cookie.remove(key, { expires: 1 }); // Expire dans une milliseconde
     }
   };
 
@@ -15,7 +15,7 @@ const Logout = () => {
       url: `${process.env.REACT_APP_API_URL}api/user/logout`,
       withCredentials: true,
     })
-      .then(() => removeCookie("jwt"))
+      .then(() => removeCookie("jwt")) // Retire le cookie en front
       .catch((err) => console.log(err));
 
     window.location = "/";

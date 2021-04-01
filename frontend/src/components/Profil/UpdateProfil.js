@@ -33,9 +33,7 @@ const UpdateProfil = () => {
             alt="user-pic"
           />
           <UploadImg />
-
           <p>{error.maxSize}</p>
-
           <p>{error.format}</p>
         </div>
         <div className="right-part">

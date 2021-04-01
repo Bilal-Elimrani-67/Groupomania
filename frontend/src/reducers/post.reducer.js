@@ -23,7 +23,7 @@ export default function postReducer(state = initialState, action) {
             if (tmp_posts[i].comment_id !== null) {
               let exist = false;
               for (let x = 0; x < posts[t].comments.length; x++) {
-                if (tmp_posts[i].comment_id == posts[t].comments[x].id) {
+                if (tmp_posts[i].comment_id === posts[t].comments[x].id) {
                   exist = true;
                   break;
                 }

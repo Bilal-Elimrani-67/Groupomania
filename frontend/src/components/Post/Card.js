@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { dateParser, isEmpty } from "../Utils";
-
 import LikeButton from "./LikeButton";
 import { updatePost } from "../../actions/post.actions";
 
@@ -59,7 +58,6 @@ const Card = ({ post }) => {
               </div>
               <span>{dateParser(post.created_at)}</span>
             </div>
-
             {isUpdated === false && <p>{post.message}</p>}
             {isUpdated && (
               <div className="update-post">
@@ -101,7 +99,6 @@ const Card = ({ post }) => {
                 <span>{post.comments}</span>
               </div>
               <LikeButton post={post} />
-              <img src="./img/icons/share.svg" alt="share" />
             </div>
           </div>
         </>
