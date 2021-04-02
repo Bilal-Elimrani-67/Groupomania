@@ -10,7 +10,7 @@ const NewPostForm = () => {
   const [postPicture, setPostPicture] = useState(null);
   const [video, setVideo] = useState("");
   const [file, setFile] = useState();
-  const userData = useSelector((state) => state.userReducer);
+  const userData = useSelector((state) => state.userReducer); // Chercher dans le store
   const error = useSelector((state) => state.errorReducer.postError);
   const dispatch = useDispatch();
 
@@ -47,7 +47,7 @@ const NewPostForm = () => {
     if (!isEmpty(userData)) setIsLoading(false);
 
     const handleVideo = () => {
-      let findLink = message.split(" ");
+      let findLink = message.split(" "); // Scinde une chaine de caractère
       for (let i = 0; i < findLink.length; i++) {
         if (
           findLink[i].includes("https://www.yout") ||
