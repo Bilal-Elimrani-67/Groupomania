@@ -96,7 +96,7 @@ module.exports.deletePost = (req, res) => {
 };
 
 module.exports.likePost = async (req, res) => {
-  let sql = `INSERT INTO likes(author,post) VALUES (${connection.escape(
+  let sql = `INSERT INTO likes(author,post) VALUES(${connection.escape(
     req.body.id
   )}, ${connection.escape(req.params.id)})`;
   connection.query(sql, (errors, result, fields) => {
