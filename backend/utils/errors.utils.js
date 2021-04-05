@@ -1,3 +1,4 @@
+// Cas erreur pour l'enregistrement
 module.exports.signUpErrors = (err) => {
   let errors = { pseudo: "", email: "", password: "" };
 
@@ -18,6 +19,7 @@ module.exports.signUpErrors = (err) => {
   return errors;
 };
 
+// Cas erreur pour se connecter
 module.exports.signInErrors = (err) => {
   let errors = { email: "", password: "" };
 
@@ -29,6 +31,7 @@ module.exports.signInErrors = (err) => {
   return errors;
 };
 
+// Cas erreur pour le téléchargement
 module.exports.uploadErrors = (err) => {
   let errors = { format: "", maxSize: "" };
 

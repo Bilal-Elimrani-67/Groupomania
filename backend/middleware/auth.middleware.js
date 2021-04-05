@@ -3,14 +3,15 @@ const client = require("../config/sgbd");
 const connection = client.client.getInstance();
 const jwt = require("jsonwebtoken");
 
+// Vérifie pour savoir si l'utilisateur est toujours connecté
 module.exports.checkUser = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const token = req.cookies.jwt; // On se récupére le token
   if (token) {
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
       if (err) {
         console.log("error verify token");
         res.locals.user = null;
-        res.cookie("jwt", "", { maxAge: 1 });
+        res.cookie("jwt", "", { maxAge: 1 }); // En milliseconde
         next();
       } else {
         let sql = `SELECT id,email,pseudo FROM users WHERE id= ${connection.escape(
@@ -33,8 +34,9 @@ module.exports.checkUser = (req, res, next) => {
   }
 };
 
+// Controle si le token correspond à un user dans la BDD
 module.exports.requireAuth = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const token = req.cookies.jwt; // On se récupére le token
   if (token) {
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
       if (err) {

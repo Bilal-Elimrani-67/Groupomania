@@ -14,6 +14,7 @@ module.exports.getAllPost = (req, res) => {
   });
 };
 
+// Lire un post
 module.exports.readPost = (req, res) => {
   let sql = `SELECT * FROM posts WHERE id=${connection.escape(req.params.id)}`;
   connection.query(sql, (errors, result, fields) => {
@@ -32,6 +33,7 @@ module.exports.readPost = (req, res) => {
   });
 };
 
+// Créer un post
 module.exports.createPost = async (req, res) => {
   let fileName;
   if (req.file !== null && req.file !== undefined) {
@@ -49,7 +51,6 @@ module.exports.createPost = async (req, res) => {
       return res.status(201).json({ errors });
     }
     fileName = req.body.posterId + Date.now() + ".jpg";
-
     await pipeline(
       req.file.stream,
       fs.createWriteStream(`../frontend/public/uploads/posts/${fileName}`)
@@ -64,13 +65,13 @@ module.exports.createPost = async (req, res) => {
   )},  ${connection.escape(image_path)},  ${connection.escape(
     req.body.posterId
   )}, ${connection.escape(req.body.video)})`;
-
   connection.query(sql, (errors, result, fields) => {
     if (errors) return res.status(500).json(errors);
     return res.status(200).json(result);
   });
 };
 
+// Modifier un post
 module.exports.updatePost = (req, res) => {
   let sql = `UPDATE posts SET message = ${connection.escape(
     req.body.message
@@ -84,6 +85,7 @@ module.exports.updatePost = (req, res) => {
   });
 };
 
+// Supprimer un post
 module.exports.deletePost = (req, res) => {
   let sql = `DELETE FROM posts WHERE id=${connection.escape(
     req.params.id
@@ -95,6 +97,7 @@ module.exports.deletePost = (req, res) => {
   });
 };
 
+// Aimer un post
 module.exports.likePost = async (req, res) => {
   let sql = `INSERT INTO likes(author,post) VALUES(${connection.escape(
     req.body.id
@@ -105,6 +108,7 @@ module.exports.likePost = async (req, res) => {
   });
 };
 
+// Ne plus aimer un post
 module.exports.unlikePost = async (req, res) => {
   let sql = `DELETE FROM likes WHERE post= ${connection.escape(
     req.params.id

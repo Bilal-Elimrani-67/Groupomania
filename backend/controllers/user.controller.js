@@ -3,14 +3,15 @@ const mysql = require("mysql");
 const { response } = require("express");
 let connection = client.client.getInstance();
 
+// Obtenir tout les utilisateurs
 module.exports.getAllUsers = async (req, res) => {
   connection.query("SELECT * FROM users;", (errors, result, fields) => {
     if (errors) return res.status(500).json(errors);
-
     return res.status(200).json(result);
   });
 };
 
+// Obtenir les infos d'un seul utilisateur
 module.exports.userInfo = (req, res) => {
   console.log(req.params.id);
   let sql = `SELECT id,email,bio,pseudo,profil_pic,created_at FROM users WHERE id=${connection.escape(
@@ -23,6 +24,7 @@ module.exports.userInfo = (req, res) => {
   });
 };
 
+// Modification d'un utilisateur
 module.exports.updateUser = async (req, res) => {
   /*if (req.params.id !== res.locals.user.id) {
     return res.status(403).json("Forbidden");
@@ -39,6 +41,7 @@ module.exports.updateUser = async (req, res) => {
   });
 };
 
+// Suppression d'un utilisateur
 module.exports.deleteUser = async (req, res) => {
   let sql = `DELETE FROM users WHERE id=${connection.escape(req.params.id)};`;
   connection.query(sql, (errors, result, fields) => {
