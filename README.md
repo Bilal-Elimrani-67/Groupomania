@@ -1,6 +1,5 @@
 # Groupomania
 
-https://github.com/Bilal-Elimrani-67/Groupomania.git
 
 Backend :
 cd backend =>
