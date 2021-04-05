@@ -1,11 +1,12 @@
 const client = require("../config/sgbd");
 const mysql = require("mysql");
-const fs = require("fs");
+const fs = require("fs"); // FileSystem : Pour incrémenter des élements dans des fichier
 const { promisify } = require("util");
 const pipeline = promisify(require("stream").pipeline);
 const { uploadErrors } = require("../utils/errors.utils");
 let connection = client.client.getInstance();
 
+// Mettre une image dans le profil
 module.exports.uploadProfil = async (req, res) => {
   try {
     console.log(req.file);
@@ -14,9 +15,9 @@ module.exports.uploadProfil = async (req, res) => {
       req.file.detectedMimeType != "image/png" &&
       req.file.detectedMimeType != "image/jpeg"
     )
-      throw Error("invalid file");
+      throw Error("invalid file"); // On jete l'erreur
 
-    if (req.file.size > 500000) throw Error("max size");
+    if (req.file.size > 500000) throw Error("max size"); //Ko
   } catch (err) {
     const errors = uploadErrors(err);
     return res.status(201).json({ errors });
@@ -25,7 +26,7 @@ module.exports.uploadProfil = async (req, res) => {
 
   await pipeline(
     req.file.stream,
-    fs.createWriteStream(`../frontend/public/uploads/profil/${fileName}`)
+    fs.createWriteStream(`../frontend/public/uploads/profil/${fileName}`) //Dans ce chemin on créer le fichier
   );
   console.log(req.body);
   let sql = `UPDATE users SET profil_pic = ${connection.escape(

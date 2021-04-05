@@ -1,6 +1,7 @@
 const client = require("../config/sgbd");
 const mysql = require("mysql");
 const { response } = require("express");
+const user = require("../models/user.models");
 let connection = client.client.getInstance();
 
 // Obtenir tout les utilisateurs
@@ -13,40 +14,39 @@ module.exports.getAllUsers = async (req, res) => {
 
 // Obtenir les infos d'un seul utilisateur
 module.exports.userInfo = (req, res) => {
-  console.log(req.params.id);
-  let sql = `SELECT id,email,bio,pseudo,profil_pic,created_at FROM users WHERE id=${connection.escape(
-    req.params.id
-  )};`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    if (result == []) return res.status(404).json(result);
-    return res.status(200).json(result);
-  });
+  let parameters = [req.params.id];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      if (result == []) return res.status(404).json(result);
+      return res.status(200).json(result);
+    });
+  };
+  User.get(sql_request, parameters);
 };
 
 // Modification d'un utilisateur
 module.exports.updateUser = async (req, res) => {
-  /*if (req.params.id !== res.locals.user.id) {
-    return res.status(403).json("Forbidden");
-  }*/
-  let id = req.params.id;
-  let bio = req.body.bio;
-  let sql = `UPDATE users SET bio = ${connection.escape(
-    bio
-  )} WHERE id= ${connection.escape(id)}`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    if (result.affectedRows < 1) return res.status(404).json(result);
-    return res.status(200).json(result);
-  });
+  let parameters = [req.body.bio, req.params.id];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      if (result.affectedRows < 1) return res.status(404).json(result);
+      return res.status(200).json(result);
+    });
+  };
+  User.update(sql_request, parameters);
 };
 
 // Suppression d'un utilisateur
 module.exports.deleteUser = async (req, res) => {
-  let sql = `DELETE FROM users WHERE id=${connection.escape(req.params.id)};`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    if (result.affectedRows < 1) return res.status(404).json(result);
-    return res.status(200).json(result);
-  });
+  let parameters = [req.params.id];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      if (result.affectedRows < 1) return res.status(404).json(result);
+      return res.status(200).json(result);
+    });
+  };
+  User.delete(sql_request, parameters);
 };

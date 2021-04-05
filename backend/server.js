@@ -6,7 +6,7 @@ const postRoutes = require("./routes/post.routes");
 const { checkUser, requireAuth } = require("./middleware/auth.middleware");
 const cors = require("cors");
 
-require("dotenv").config({ path: "./config/.env" }); // Chemin pour aller dans le dossier
+require("dotenv").config(); // Chemin pour aller dans le dossier
 require("./config/sgbd");
 
 const app = express();

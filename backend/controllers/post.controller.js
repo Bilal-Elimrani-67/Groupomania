@@ -4,14 +4,19 @@ const { promisify } = require("util");
 const pipeline = promisify(require("stream").pipeline);
 const mysql = require("mysql");
 const client = require("../config/sgbd");
+const post = require("../models/post.models");
+const comment = require("../models/comment.models");
+const like = require("../models/like.models");
 let connection = client.client.getInstance();
 
 module.exports.getAllPost = (req, res) => {
-  let sql = `SELECT posts.id as id, posts.message as message, posts.author as author, posts.created_at as created_at, posts.image as image, posts.video as video, users.pseudo as pseudo, users.profil_pic as profil_pic, comments.id as comment_id, comments.message as comment_message, comments.author as comment_author, comments.create_at as comment_create_at, commenter.pseudo as comment_pseudo, commenter.profil_pic as comment_profil_pic, likes.author as like_author, likes.id as like_id  FROM posts right join users on posts.author=users.id left join likes on posts.id= likes.post left join comments on posts.id=comments.post left join users as commenter on comments.author= commenter.id order by posts.created_at desc`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    return res.status(200).json(result);
-  });
+  let sql_request = (sql) => {
+    connection.query(sql, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      return res.status(200).json(result);
+    });
+  };
+  Post.fetch_all(sql_request);
 };
 
 // Lire un post
@@ -20,7 +25,6 @@ module.exports.readPost = (req, res) => {
   connection.query(sql, (errors, result, fields) => {
     if (errors) return res.status(500).json(errors);
     if (result == []) return res.status(404).json(result);
-
     sql = `SELECT id,pseudo,profil_pic FROM users WHERE id=${result[0].author}`;
     connection.query(sql, (errors, resUsers, fields) => {
       if (errors) return res.status(500).json(errors);
@@ -60,97 +64,106 @@ module.exports.createPost = async (req, res) => {
     req.file !== null && req.file !== undefined
       ? "./uploads/posts/" + fileName
       : "";
-  let sql = `INSERT INTO posts(message,image,author,video) VALUES ( ${connection.escape(
-    req.body.message
-  )},  ${connection.escape(image_path)},  ${connection.escape(
-    req.body.posterId
-  )}, ${connection.escape(req.body.video)})`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    return res.status(200).json(result);
-  });
+
+  let parameters = [
+    req.body.message,
+    image_path,
+    req.body.posterId,
+    req.body.video,
+  ];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      return res.status(200).json(result);
+    });
+  };
+  Post.create(sql_request, parameters);
 };
 
 // Modifier un post
 module.exports.updatePost = (req, res) => {
-  let sql = `UPDATE posts SET message = ${connection.escape(
-    req.body.message
-  )} WHERE id= ${connection.escape(
-    req.params.id
-  )} AND author=${connection.escape(req.body.posterId)}`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    if (result.affectedRows < 1) return res.status(404).json(sql);
-    return res.status(200).json(result);
-  });
+  let parameters = [req.body.message, req.params.id, req.body.posterId];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      if (result.affectedRows < 1) return res.status(404).json(sql);
+      return res.status(200).json(result);
+    });
+  };
+  Post.update(sql_request, parameters);
 };
 
 // Supprimer un post
 module.exports.deletePost = (req, res) => {
-  let sql = `DELETE FROM posts WHERE id=${connection.escape(
-    req.params.id
-  )} AND( author=${connection.escape(req.body.posterId)})`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    if (result.affectedRows < 1) return res.status(404).json(result);
-    return res.status(200).json(result);
-  });
+  let parameters = [req.params.id, req.body.posterId];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      if (result.affectedRows < 1) return res.status(404).json(result);
+      return res.status(200).json(result);
+    });
+  };
+  Post.delete(sql_request, parameters);
 };
 
 // Aimer un post
 module.exports.likePost = async (req, res) => {
-  let sql = `INSERT INTO likes(author,post) VALUES(${connection.escape(
-    req.body.id
-  )}, ${connection.escape(req.params.id)})`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    return res.status(200).json(result);
-  });
+  let parameters = [req.body.id, req.params.id];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      return res.status(200).json(result);
+    });
+  };
+  Like.create(sql_request, parameters);
 };
 
 // Ne plus aimer un post
 module.exports.unlikePost = async (req, res) => {
-  let sql = `DELETE FROM likes WHERE post= ${connection.escape(
-    req.params.id
-  )} AND author=${connection.escape(req.body.id)}`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    return res.status(200).json(result);
-  });
+  let parameters = [req.params.id, req.body.id];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      return res.status(200).json(result);
+    });
+  };
+  Like.delete(sql_request, parameters);
 };
 
+// Pour commenter un post
 module.exports.commentPost = (req, res) => {
-  let sql = `INSERT INTO comments(message,author,post) VALUES ( ${connection.escape(
-    req.body.text
-  )},  ${connection.escape(req.body.commenterId)},  ${connection.escape(
-    req.params.id
-  )})`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    return res.status(200).json(result);
-  });
+  let parameters = [req.body.text, req.body.commenterId, req.params.id];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      return res.status(200).json(result);
+    });
+  };
+  Comment.create(sql_request, parameters);
 };
 
+// Pour éditer le commentaire un post
 module.exports.editCommentPost = (req, res) => {
-  let sql = `UPDATE comments SET message = ${connection.escape(
-    req.body.message
-  )} WHERE id= ${connection.escape(
-    req.params.id
-  )} AND author=${connection.escape(req.body.userId)}`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    if (result.affectedRows < 1) return res.status(404).json(result);
-    return res.status(200).json(result);
-  });
+  let parameters = [req.body.message, req.params.id, req.body.userId];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      if (result.affectedRows < 1) return res.status(404).json(result);
+      return res.status(200).json(result);
+    });
+  };
+  Comment.update(sql_request, parameters);
 };
 
+// Pour supprimer le commentaire d'un post
 module.exports.deleteCommentPost = (req, res) => {
-  let sql = `DELETE FROM comments WHERE id=${connection.escape(
-    req.params.id
-  )} AND( author=${connection.escape(req.body.userId)} )`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    if (result.affectedRows < 1) return res.status(404).json(result);
-    return res.status(200).json(result);
-  });
+  let parameters = [req.params.id, req.body.userId];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      if (result.affectedRows < 1) return res.status(404).json(result);
+      return res.status(200).json(result);
+    });
+  };
+  Comment.delete(sql_request, parameters);
 };

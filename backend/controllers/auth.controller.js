@@ -15,7 +15,6 @@ const createToken = (id) => {
 
 // Enregistrer un utilisateur
 module.exports.signUp = async (req, res) => {
-  console.log(req.body);
   let { pseudo, email, password } = req.body;
   let reg = new RegExp(/\s/g, "g");
   password = password.replace(reg, "");
@@ -45,52 +44,53 @@ module.exports.signUp = async (req, res) => {
     if (err) return res.status(500).json(err);
     bcrypt.hash(password, salt, (errors, hash) => {
       if (errors == {}) return res.status(500).json(errors);
-      let sql = `SELECT pseudo FROM users WHERE pseudo=${connection.escape(
-        pseudo
-      )}`;
-      connection.query(sql, (err, result, fields) => {
-        if (err) {
-          if (err.errno == 1062) {
-          }
-          return res.status(500).json(err);
-        }
-        if (JSON.stringify(result) !== JSON.stringify([])) {
-          console.log(result);
-          return res.status(200).json({
-            pseudo: "Ce pseudo est déjà pris",
-            email: "",
-            password: "",
-            errors: "Erreur",
-          });
-        }
-        sql = `SELECT email FROM users WHERE email=${connection.escape(email)}`;
-        connection.query(sql, (err, result, fields) => {
+      let parameters = [pseudo, email, hash];
+
+      let verifyPseudo = (sql, params) => {
+        connection.query(sql, params[0], (err, result, fields) => {
           if (err) {
+            if (err.errno == 1062) {
+            }
             return res.status(500).json(err);
           }
           if (JSON.stringify(result) !== JSON.stringify([])) {
             return res.status(200).json({
-              pseudo: "",
-              email: "Email déjà pris",
+              pseudo: "Ce pseudo est déjà pris",
+              email: "",
               password: "",
               errors: "Erreur",
             });
           }
-          sql = `INSERT INTO users(pseudo, email, password) VALUES ( ?
-      ,  ?,  ?
-      )`;
-          connection.query(
-            sql,
-            [pseudo, email, hash],
-            (err, result, fields) => {
+
+          let verifyEmail = (sql, params) => {
+            connection.query(sql, params[1], (err, result, fields) => {
               if (err) {
                 return res.status(500).json(err);
               }
-              return res.status(200).json(result);
-            }
-          );
+              if (JSON.stringify(result) !== JSON.stringify([])) {
+                return res.status(200).json({
+                  pseudo: "",
+                  email: "Email déjà pris",
+                  password: "",
+                  errors: "Erreur",
+                });
+              }
+
+              let create = (sql, params) => {
+                connection.query(sql, params, (err, result, fields) => {
+                  if (err) {
+                    return res.status(500).json(err);
+                  }
+                  return res.status(200).json(result);
+                });
+              };
+              User.create(create, params);
+            });
+          };
+          User.getByEmail(verifyEmail, params);
         });
-      });
+      };
+      User.getByPseudo(verifyPseudo, parameters);
     });
   });
 };
@@ -106,29 +106,34 @@ module.exports.signIn = async (req, res) => {
       errors: "Erreur",
     });
   }
-  let sql = `SELECT * FROM users WHERE email= ${connection.escape(email)}`;
-  connection.query(sql, (err, result, fields) => {
-    if (err) return res.status(500).json(err);
-    if (!result[0]) {
-      return res.status(200).json({
-        email: "Email incorrect",
-        password: "",
-        errors: "Erreur",
-      });
-    }
-    bcrypt.compare(password, result[0].password, (errors, results) => {
-      if (results) {
-        const token = createToken(result[0].id);
-        res.cookie("jwt", token, { httpOnly: true, maxAge }); // Sécurité du cookie
-        return res.status(200).json({ user: result[0].id });
+
+  let parameters = [email, password];
+  let sql_request = (sql, params) => {
+    connection.query(sql, params[0], (err, result, fields) => {
+      if (err) return res.status(500).json(err);
+      if (!result[0]) {
+        return res.status(200).json({
+          email: "Email incorrect",
+          password: "",
+          errors: "Erreur",
+        });
       }
-      return res.status(200).json({
-        email: "",
-        password: "Mot de passe incorrect",
-        errors: "Erreur",
+      let password = params[1];
+      bcrypt.compare(password, result[0].password, (errors, results) => {
+        if (results) {
+          const token = createToken(result[0].id);
+          res.cookie("jwt", token, { httpOnly: true, maxAge }); // Sécurité du cookie
+          return res.status(200).json({ user: result[0].id });
+        }
+        return res.status(200).json({
+          email: "",
+          password: "Mot de passe incorrect",
+          errors: "Erreur",
+        });
       });
     });
-  });
+  };
+  User.get(sql_request, parameters);
 };
 
 // Déconnecter un utilisateur
