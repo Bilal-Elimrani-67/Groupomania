@@ -1,7 +1,7 @@
 const client = require("../config/sgbd");
 const mysql = require("mysql");
 const { response } = require("express");
-const user = require("../models/user.models");
+const User = require("../models/user.models");
 let connection = client.client.getInstance();
 
 // Obtenir tout les utilisateurs
@@ -27,7 +27,7 @@ module.exports.userInfo = (req, res) => {
 
 // Modification d'un utilisateur
 module.exports.updateUser = async (req, res) => {
-  let parameters = [req.body.bio, req.params.id];
+  let parameters = [req.body.bio, res.locals.user.id];
   let sql_request = (sql, params) => {
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);
@@ -40,7 +40,7 @@ module.exports.updateUser = async (req, res) => {
 
 // Suppression d'un utilisateur
 module.exports.deleteUser = async (req, res) => {
-  let parameters = [req.params.id];
+  let parameters = [res.locals.user.id];
   let sql_request = (sql, params) => {
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);

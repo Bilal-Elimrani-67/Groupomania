@@ -1,3 +1,4 @@
+const { checkUser, requireAuth } = require("../middleware/auth.middleware");
 const router = require("express").Router(); // On se créer un routeur d'Express
 const authController = require("../controllers/auth.controller");
 const userController = require("../controllers/user.controller");
@@ -13,10 +14,16 @@ router.get("/logout", authController.logout); // Pour déconnecter un utilisateu
 // Router Utilisateur(s)
 router.get("/", userController.getAllUsers);
 router.get("/:id", userController.userInfo); // :id => c'est un paramètre (req.params)
-router.put("/:id", userController.updateUser);
-router.delete("/:id", userController.deleteUser);
+router.put("/:id", checkUser, requireAuth, userController.updateUser);
+router.delete("/:id", checkUser, requireAuth, userController.deleteUser);
 
-// Route Télécharment d'image
-router.post("/upload", upload.single("file"), uploadController.uploadProfil);
+// Router Téléchargement d'image
+router.post(
+  "/upload",
+  checkUser,
+  requireAuth,
+  upload.single("file"),
+  uploadController.uploadProfil
+);
 
 module.exports = router;

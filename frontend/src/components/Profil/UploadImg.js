@@ -5,10 +5,10 @@ import { uploadPicture, deleteProfil } from "../../actions/user.actions";
 const UploadImg = () => {
   const [file, setFile] = useState();
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.userReducer);
+  const userData = useSelector((state) => state.userReducer); // On prend les données de notre utilisateur
 
   const handlePicture = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // On casse l'événement par défault
     console.log(userData);
     const data = new FormData(); // Mettre dans un package des img + infos
     data.append("name", userData.pseudo);
@@ -27,8 +27,10 @@ const UploadImg = () => {
     }
   };
 
+  // Formulaire pour changer d'image et supprimer son profil
   return (
     <>
+      {/* CHANGER L'IMAGE DE PROFIL */}
       <form action="" onSubmit={handlePicture} className="upload-pic">
         <label htmlFor="file">Changer d'image</label>
         <input
@@ -42,6 +44,7 @@ const UploadImg = () => {
         <input type="submit" value="Envoyer" />
         <br />
       </form>
+      {/* SUPPRIMER LE PROFIL */}
       <form action="" onSubmit={handleProfil}>
         <input type="number" name="id" hidden value={userData.id} />
         <input type="submit" value="Supprimer mon profil" />

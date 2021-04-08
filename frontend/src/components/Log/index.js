@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import SignUpForm from "./SignUpForm";
-import SingInForm from "./SingInForm";
+import SignUpForm from "./SignUpForm"; // On importe le fichier SignUpForm pour s'inscrire
+import SingInForm from "./SingInForm"; // On importe le fichier SignInForm pour se connecter
 
 const Log = (props) => {
-  const [signUpModal, setSignUpModal] = useState(props.signup);
-  const [signInModal, setSignInModal] = useState(props.signin);
+  const [signUpModal, setSignUpModal] = useState(props.signup); // Le modal pour s'inscrire
+  const [signInModal, setSignInModal] = useState(props.signin); // Le modal pour se connecter
 
+  // On se récupére l'événement de ce qui a été cliqué
   const handleModales = (e) => {
     if (e.target.id === "register") {
       setSignInModal(false);
@@ -16,6 +17,7 @@ const Log = (props) => {
     }
   };
 
+  // C'est ici que va contenir notre formulaire pour s'inscrire et se connecter
   return (
     <div className="connection-form">
       <div className="form-container">
@@ -23,14 +25,14 @@ const Log = (props) => {
           <li
             onClick={handleModales}
             id="register"
-            className={signUpModal ? "active-btn" : null}
+            className={signUpModal ? "active-btn" : null} // Si signUpModal est true tu mets la classe ""
           >
             S'inscrire
           </li>
           <li
             onClick={handleModales}
             id="login"
-            className={signInModal ? "active-btn" : null}
+            className={signInModal ? "active-btn" : null} // Si signInModal est true tu mets la classe ""
           >
             Se connecter
           </li>

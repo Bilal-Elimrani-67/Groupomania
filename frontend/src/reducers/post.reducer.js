@@ -1,3 +1,4 @@
+// On s'importe toutes la data
 import {
   DELETE_COMMENT,
   DELETE_POST,
@@ -12,6 +13,7 @@ const initialState = {};
 
 export default function postReducer(state = initialState, action) {
   switch (action.type) {
+    // On traite GET_POSTS
     case GET_POSTS:
       let posts = [];
       const tmp_posts = action.payload;
@@ -83,6 +85,8 @@ export default function postReducer(state = initialState, action) {
         posts.push(tmp);
       }
       return posts;
+
+    // On traite LIKE_POST
     case LIKE_POST:
       return state.map((post) => {
         if (post._id === action.payload.postId) {
@@ -93,6 +97,8 @@ export default function postReducer(state = initialState, action) {
         }
         return post;
       });
+
+    // On traite UNLIKE_POST
     case UNLIKE_POST:
       return state.map((post) => {
         if (post._id === action.payload.postId) {
@@ -103,6 +109,8 @@ export default function postReducer(state = initialState, action) {
         }
         return post;
       });
+
+    // On traite UPDATE_POST
     case UPDATE_POST:
       return state.map((post) => {
         if (post.id === action.payload.postId) {
@@ -115,8 +123,12 @@ export default function postReducer(state = initialState, action) {
           return post;
         }
       });
+
+    // On traite DELETE_POST
     case DELETE_POST:
       return state.filter((post) => post.id !== action.payload.postId);
+
+    // On traite EDIT_COMMENT
     case EDIT_COMMENT:
       return state.map((post) => {
         if (post.id === action.payload.postId) {
@@ -135,6 +147,8 @@ export default function postReducer(state = initialState, action) {
           };
         } else return post;
       });
+
+    // On traite DELETE_COMMENT
     case DELETE_COMMENT:
       return state.map((post) => {
         if (post._id === action.payload.postId) {

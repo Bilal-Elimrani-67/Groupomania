@@ -1,6 +1,6 @@
-class User {
+module.exports = class User {
   static get(callback, params) {
-    let sql = `SELECT id,email,bio,pseudo,profil_pic,created_at FROM users WHERE id=?`;
+    let sql = `SELECT id,email,bio,pseudo,profil_pic,created_at,permissions FROM users WHERE id=?`;
     callback(sql, params);
   }
   static getByPseudo(callback, params) {
@@ -11,17 +11,32 @@ class User {
     let sql = `SELECT * FROM users WHERE email=?`;
     callback(sql, params);
   }
+  static getByToken(callback, params) {
+    let sql = `SELECT id,token FROM users WHERE token LIKE ?`;
+    callback(sql, params);
+  }
   static create(callback, params) {
     let sql = `INSERT INTO users(pseudo, email, password) VALUES (?,?,?)`;
     callback(sql, params);
   }
   static update(callback, params) {
-    let sql = `UPDATE users SET bio = ?
-    WHERE id= ?`;
+    let sql = `UPDATE users SET bio = ? WHERE id= ?`;
+    callback(sql, params);
+  }
+  static updateProfilPic(callback, params) {
+    let sql = `UPDATE users SET profil_pic = ? WHERE id= ?`;
+    callback(sql, params);
+  }
+  static addToken(callback, params) {
+    let sql = `UPDATE users SET token = ? WHERE id= ?`;
     callback(sql, params);
   }
   static delete(callback, params) {
     let sql = `DELETE FROM users WHERE id=?`;
     callback(sql, params);
   }
-}
+  static deleteToken(callback, params) {
+    let sql = `UPDATE users SET token = NULL WHERE token= ?`;
+    callback(sql, params);
+  }
+};

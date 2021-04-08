@@ -3,6 +3,7 @@ const mysql = require("mysql");
 let connection = client.client.getInstance();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const User = require("../models/user.models");
 
 const maxAge = 3 * 24 * 60 * 60 * 1000; // 3j * En milliseconde
 
@@ -24,7 +25,6 @@ module.exports.signUp = async (req, res) => {
   );
   email_pass = reg.test(email);
   if (!email_pass) {
-    console.log("ien");
     return res.status(200).json({
       pseudo: "",
       email: "Format email incorrect",
@@ -98,6 +98,14 @@ module.exports.signUp = async (req, res) => {
 // Connecter un utilisateur
 module.exports.signIn = async (req, res) => {
   const { email, password } = req.body;
+  if (email === "") {
+    return res.status(200).json({
+      pseudo: "",
+      email: "Veuillez entrer un email",
+      password: "",
+      errors: "Erreur",
+    });
+  }
   if (password === "") {
     return res.status(200).json({
       pseudo: "",
@@ -121,23 +129,38 @@ module.exports.signIn = async (req, res) => {
       let password = params[1];
       bcrypt.compare(password, result[0].password, (errors, results) => {
         if (results) {
+          const uid = result[0].id;
           const token = createToken(result[0].id);
-          res.cookie("jwt", token, { httpOnly: true, maxAge }); // Sécurité du cookie
-          return res.status(200).json({ user: result[0].id });
+          let sql_request = (sql, params) => {
+            connection.query(sql, params, (err, result, fields) => {
+              if (err) return res.status(500).json(err);
+              res.cookie("jwt", token, { httpOnly: true, maxAge }); // Sécurité du cookie
+              return res.status(200).json({ user: uid });
+            });
+          };
+          let parameters = [token, uid];
+          User.addToken(sql_request, parameters);
+        } else {
+          return res.status(200).json({
+            email: "",
+            password: "Mot de passe incorrect",
+            errors: "Erreur",
+          });
         }
-        return res.status(200).json({
-          email: "",
-          password: "Mot de passe incorrect",
-          errors: "Erreur",
-        });
       });
     });
   };
-  User.get(sql_request, parameters);
+  User.getByEmail(sql_request, parameters);
 };
 
 // Déconnecter un utilisateur
 module.exports.logout = (req, res) => {
-  res.cookie("jwt", "", { maxAge: 1 }); // En milliseconde
-  return res.status(200).json("OK");
+  let sql_request = (sql, params) => {
+    connection.query(sql, params, (err, result, fields) => {
+      if (err) return res.status(500).json(err);
+      res.cookie("jwt", "", { maxAge: 1 }); // En milliseconde
+      return res.status(200).json("OK");
+    });
+  };
+  User.deleteToken(sql_request, req.cookies.jwt);
 };

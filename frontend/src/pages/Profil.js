@@ -1,16 +1,17 @@
 import React, { useContext } from "react";
-import Log from "../components/Log";
-import { UidContext } from "../components/AppContext";
-import UpdateProfil from "../components/Profil/UpdateProfil";
+import Log from "../components/Log"; // On importe le dossier Log
+import { UidContext } from "../components/AppContext"; // On s'importe le UidContext
+import UpdateProfil from "../components/Profil/UpdateProfil"; // On importe le fichier UpdateProfil
 
 const Profil = () => {
-  const uid = useContext(UidContext);
+  const uid = useContext(UidContext); // On s'attrape la valeur de UidContext
 
   return (
     <div className="profil-page">
       {uid ? (
         <UpdateProfil />
       ) : (
+        // On veut la logique Log (s'incrire ou se connecter)
         <div className="log-container">
           <Log signin={false} signup={true} />
           <div className="img-container">

@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { UidContext } from "../components/AppContext";
-import LeftNav from "../components/LeftNav";
+import LeftNav from "../components/LeftNav"; // On s'importe notre LeftNav
 import NewPostForm from "../components/Post/NewPostForm";
 import Thread from "../components/Thread";
-import Log from "../components/Log";
+import Log from "../components/Log"; // On s'importe notre Log
 
 const Home = () => {
   const uid = useContext(UidContext);

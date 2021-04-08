@@ -1,12 +1,12 @@
-const { uploadErrors } = require("../utils/errors.utils");
 const fs = require("fs");
 const { promisify } = require("util");
 const pipeline = promisify(require("stream").pipeline);
 const mysql = require("mysql");
 const client = require("../config/sgbd");
-const post = require("../models/post.models");
-const comment = require("../models/comment.models");
-const like = require("../models/like.models");
+const Post = require("../models/post.models");
+const Comment = require("../models/comment.models");
+const Like = require("../models/like.models");
+const User = require("../models/user.models");
 let connection = client.client.getInstance();
 
 module.exports.getAllPost = (req, res) => {
@@ -17,24 +17,6 @@ module.exports.getAllPost = (req, res) => {
     });
   };
   Post.fetch_all(sql_request);
-};
-
-// Lire un post
-module.exports.readPost = (req, res) => {
-  let sql = `SELECT * FROM posts WHERE id=${connection.escape(req.params.id)}`;
-  connection.query(sql, (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    if (result == []) return res.status(404).json(result);
-    sql = `SELECT id,pseudo,profil_pic FROM users WHERE id=${result[0].author}`;
-    connection.query(sql, (errors, resUsers, fields) => {
-      if (errors) return res.status(500).json(errors);
-      if (result == []) return res.status(404).json(result);
-      let response = result[0];
-      response.user = resUsers[0];
-      console.log(response);
-      return res.status(200).json(response);
-    });
-  });
 };
 
 // Créer un post
@@ -64,11 +46,10 @@ module.exports.createPost = async (req, res) => {
     req.file !== null && req.file !== undefined
       ? "./uploads/posts/" + fileName
       : "";
-
   let parameters = [
     req.body.message,
     image_path,
-    req.body.posterId,
+    res.locals.user.id,
     req.body.video,
   ];
   let sql_request = (sql, params) => {
@@ -82,7 +63,7 @@ module.exports.createPost = async (req, res) => {
 
 // Modifier un post
 module.exports.updatePost = (req, res) => {
-  let parameters = [req.body.message, req.params.id, req.body.posterId];
+  let parameters = [req.body.message, req.params.id, res.locals.user.id];
   let sql_request = (sql, params) => {
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);
@@ -95,7 +76,7 @@ module.exports.updatePost = (req, res) => {
 
 // Supprimer un post
 module.exports.deletePost = (req, res) => {
-  let parameters = [req.params.id, req.body.posterId];
+  let parameters = [req.params.id, res.locals.user.id];
   let sql_request = (sql, params) => {
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);
@@ -108,7 +89,7 @@ module.exports.deletePost = (req, res) => {
 
 // Aimer un post
 module.exports.likePost = async (req, res) => {
-  let parameters = [req.body.id, req.params.id];
+  let parameters = [res.locals.user.id, req.params.id];
   let sql_request = (sql, params) => {
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);
@@ -120,7 +101,7 @@ module.exports.likePost = async (req, res) => {
 
 // Ne plus aimer un post
 module.exports.unlikePost = async (req, res) => {
-  let parameters = [req.params.id, req.body.id];
+  let parameters = [res.locals.user.id, req.body.id];
   let sql_request = (sql, params) => {
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);
@@ -132,7 +113,7 @@ module.exports.unlikePost = async (req, res) => {
 
 // Pour commenter un post
 module.exports.commentPost = (req, res) => {
-  let parameters = [req.body.text, req.body.commenterId, req.params.id];
+  let parameters = [req.body.text, res.locals.user.id, req.params.id];
   let sql_request = (sql, params) => {
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);
@@ -144,7 +125,7 @@ module.exports.commentPost = (req, res) => {
 
 // Pour éditer le commentaire un post
 module.exports.editCommentPost = (req, res) => {
-  let parameters = [req.body.message, req.params.id, req.body.userId];
+  let parameters = [req.body.message, req.params.id, res.locals.user.id];
   let sql_request = (sql, params) => {
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);
@@ -157,7 +138,7 @@ module.exports.editCommentPost = (req, res) => {
 
 // Pour supprimer le commentaire d'un post
 module.exports.deleteCommentPost = (req, res) => {
-  let parameters = [req.params.id, req.body.userId];
+  let parameters = [req.params.id, res.locals.user.id, res.locals.user.id];
   let sql_request = (sql, params) => {
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);

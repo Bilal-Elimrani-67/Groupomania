@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { dateParser, isEmpty } from "./Utils";
-import LikeButton from "./Post/LikeButton";
+import { dateParser, isEmpty } from "./Utils"; // On se récupère le dateParser
+import LikeButton from "./Post/LikeButton"; // On s'importe LikeButton
 import { updatePost } from "../actions/post.actions";
 import DeleteCard from "./Post/DeleteCard";
 import CardComments from "./Post/CardComments";
 
 const Card = ({ post }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // Chargement du loading tant qu'on a pas la data
   const [isUpdated, setIsUpdated] = useState(false);
   const [textUpdate, setTextUpdate] = useState(null);
   const [showComments, setShowComments] = useState(false);
-  const usersData = useSelector((state) => state.usersReducer);
-  const userData = useSelector((state) => state.userReducer);
+  const usersData = useSelector((state) => state.usersReducer); // On veut toutes les données
+  const userData = useSelector((state) => state.userReducer); // On veut la donnée du client
   const dispatch = useDispatch();
 
   const updateItem = () => {
@@ -32,6 +32,7 @@ const Card = ({ post }) => {
         <i className="fas fa-spinner fa-spin"></i>
       ) : (
         <>
+          {/* PHOTO DE L'UTILISATEUR DANS LE POST */}
           <div className="card-left">
             <img
               src={
@@ -42,6 +43,7 @@ const Card = ({ post }) => {
               alt="poster-pic"
             />
           </div>
+          {/* PSEUDO DE L'UTILISATEUR DANS LE POST + DATE DU POST */}
           <div className="card-right">
             <div className="card-header">
               <div className="pseudo">
@@ -63,9 +65,11 @@ const Card = ({ post }) => {
                 </div>
               </div>
             )}
+            {/* AFFICHER UNE IMAGE */}
             {post.image && (
               <img src={post.image} alt="card-pic" className="card-pic" />
             )}
+            {/* AFFICHER UNE VIDEO */}
             {post.video && (
               <iframe
                 width="500"
@@ -85,6 +89,7 @@ const Card = ({ post }) => {
                 <DeleteCard id={post.id} author={post.author} />
               </div>
             )}
+            {/* COMMENTER LES POSTS */}
             <div className="card-footer">
               <div className="comment-icon">
                 <img
@@ -94,6 +99,7 @@ const Card = ({ post }) => {
                 />
                 <span>{post.comments.length}</span>
               </div>
+              {/* COMPONENTS LikeButton */}
               <LikeButton post={post} />
             </div>
             {showComments && <CardComments post={post} />}

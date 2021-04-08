@@ -4,11 +4,12 @@ import { getPosts } from "../actions/post.actions";
 import Card from "./Card";
 import { isEmpty } from "./Utils";
 
+// Thread : Fil d'actualité
 const Thread = () => {
   const [loadPost, setLoadPost] = useState(true);
   const [count, setCount] = useState(5);
-  const dispatch = useDispatch(); //Permet d'envoyer une action
-  const posts = useSelector((state) => state.postReducer);
+  const dispatch = useDispatch(); // Permet d'envoyer une action
+  const posts = useSelector((state) => state.postReducer); // On se récupére tout les posts avec state.postReducer
 
   const loadMore = () => {
     if (
@@ -31,6 +32,7 @@ const Thread = () => {
   }, [loadPost, dispatch, count]);
 
   return (
+    // Tout le fil d'actualité
     <div className="thread-container">
       <ul>
         {!isEmpty(posts[0]) &&

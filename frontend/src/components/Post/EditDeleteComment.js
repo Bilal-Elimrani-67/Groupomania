@@ -3,8 +3,9 @@ import { useDispatch } from "react-redux";
 import { deleteComment, editComment } from "../../actions/post.actions";
 import { UidContext } from "../AppContext";
 
-const EditDeleteComment = ({ comment, postId }) => {
+const EditDeleteComment = ({ comment, postId, user }) => {
   const [isAuthor, setIsAuthor] = useState(false);
+  const [isMod, setIsMod] = useState(false);
   const [edit, setEdit] = useState(false);
   const [text, setText] = useState("");
   const uid = useContext(UidContext);
@@ -32,29 +33,40 @@ const EditDeleteComment = ({ comment, postId }) => {
         setIsAuthor(true);
       }
     };
+    const checkMod = () => {
+      if (user.permissions == 1) {
+        setIsMod(true);
+      }
+    };
+    checkMod();
     checkAuthor();
-  }, [uid, comment.author]);
+  }, [uid, comment.author, isMod]);
 
   return (
     <div className="edit-comment">
-      {isAuthor && edit === false && (
+      {(isAuthor || isMod) && edit === false && (
         <span onClick={() => setEdit(!edit)}>
           <img src="./img/icons/edit.svg" alt="edit-comment" />
         </span>
       )}
-      {isAuthor && edit && (
+      {(isAuthor || isMod) && edit && (
         <form action="" onSubmit={handleEdit} className="edit-comment-form">
-          <label htmlFor="" onClick={() => setEdit(!edit)}>
-            Editer
-          </label>
-          <br />
-          <input
-            type="text"
-            name="text"
-            onChange={(e) => setText(e.target.value)}
-            defaultValue={comment.text}
-          />
-          <br />
+          {isAuthor && (
+            <>
+              <label htmlFor="" onClick={() => setEdit(!edit)}>
+                Editer
+              </label>
+              <br />
+              <input
+                type="text"
+                name="text"
+                onChange={(e) => setText(e.target.value)}
+                defaultValue={comment.text}
+              />
+              <br />{" "}
+            </>
+          )}
+
           <div className="btn">
             <span
               onClick={() => {
@@ -65,7 +77,7 @@ const EditDeleteComment = ({ comment, postId }) => {
             >
               <img src="./img/icons/trash.svg" alt="delete" />
             </span>
-            <input type="submit" value="Valider modification" />
+            {isAuthor && <input type="submit" value="Valider modification" />}
           </div>
         </form>
       )}

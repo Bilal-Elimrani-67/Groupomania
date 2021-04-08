@@ -1,15 +1,15 @@
-import React from "react";
+import React from "react"; // On importe React
 import {
   BrowserRouter as Router,
   Redirect,
   Route,
   Switch,
-} from "react-router-dom";
-import Home from "../../pages/Home";
-import Profil from "../../pages/Profil";
-// import Trending from "../../pages/Trending";
+} from "react-router-dom"; // Router de React
+import Home from "../../pages/Home"; // On importe la page Home
+import Profil from "../../pages/Profil"; // On importe la page Profil
 import Navbar from "../Navbar";
 
+// On se fait notre routeur pour s'importer Home & Profil (notre navigation)
 const index = () => {
   return (
     <div>
@@ -18,7 +18,6 @@ const index = () => {
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/profil" exact component={Profil} />
-          {/* <Route path="/trending" exact component={Trending} /> */}
           <Redirect to="/" />
         </Switch>
       </Router>

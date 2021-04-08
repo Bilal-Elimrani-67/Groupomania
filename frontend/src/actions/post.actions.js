@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from "axios"; // On importe la bibliothèque Axios
 
-//posts
+// Posts
 export const GET_POSTS = "GET_POSTS";
 export const GET_ALL_POSTS = "GET_ALL_POSTS";
 export const ADD_POSTS = "ADD_POSTS";
@@ -9,7 +9,7 @@ export const UNLIKE_POST = "UNLIKE_POST";
 export const UPDATE_POST = "UPDATE_POST";
 export const DELETE_POST = "DELETE_POST";
 
-//comments
+// Commentaire pour les posts
 export const ADD_COMMENT = "ADD_COMMENT";
 export const EDIT_COMMENT = "EDIT_COMMENT";
 export const DELETE_COMMENT = "DELETE_COMMENT";
@@ -17,6 +17,7 @@ export const DELETE_COMMENT = "DELETE_COMMENT";
 // errors
 export const GET_POST_ERRORS = "GET_POST_ERRORS";
 
+// On se cherche tout les posts
 export const getPosts = (num) => {
   return (dispatch) => {
     return axios
@@ -33,7 +34,9 @@ export const getPosts = (num) => {
 export const addPost = (data) => {
   return (dispatch) => {
     return axios
-      .post(`${process.env.REACT_APP_API_URL}api/post/`, data)
+      .post(`${process.env.REACT_APP_API_URL}api/post/`, data, {
+        withCredentials: true,
+      })
       .then((res) => {
         if (res.data.errors) {
           dispatch({ type: GET_POST_ERRORS, payload: res.data.errors });
@@ -49,6 +52,7 @@ export const likePost = (postId, userId) => {
     return axios({
       method: "patch",
       url: `${process.env.REACT_APP_API_URL}api/post/like-post/` + postId,
+      withCredentials: true,
       data: { id: userId },
     })
       .then((res) => {
@@ -63,6 +67,7 @@ export const unlikePost = (postId, userId) => {
     return axios({
       method: "patch",
       url: `${process.env.REACT_APP_API_URL}api/post/unlike-post/` + postId,
+      withCredentials: true,
       data: { id: userId },
     })
       .then((res) => {
@@ -77,6 +82,7 @@ export const updatePost = (postId, message, posterId) => {
     return axios({
       method: "put",
       url: `${process.env.REACT_APP_API_URL}api/post/${postId}`,
+      withCredentials: true,
       data: { message, posterId },
     })
       .then((res) => {
@@ -91,6 +97,7 @@ export const deletePost = (postId, posterId) => {
     return axios({
       method: "delete",
       url: `${process.env.REACT_APP_API_URL}api/post/${postId}`,
+      withCredentials: true,
       data: { posterId },
     })
       .then((res) => {
@@ -105,6 +112,7 @@ export const addComment = (postId, commenterId, text, commenterPseudo) => {
     return axios({
       method: "patch",
       url: `${process.env.REACT_APP_API_URL}api/post/comment-post/${postId}`,
+      withCredentials: true,
       data: { commenterId, text, commenterPseudo },
     })
       .then((res) => {
@@ -119,6 +127,7 @@ export const editComment = (userId, commentId, message) => {
     return axios({
       method: "patch",
       url: `${process.env.REACT_APP_API_URL}api/post/edit-comment-post/${commentId}`,
+      withCredentials: true,
       data: { userId, message },
     })
       .then((res) => {
@@ -136,6 +145,7 @@ export const deleteComment = (userId, commentId) => {
     return axios({
       method: "patch",
       url: `${process.env.REACT_APP_API_URL}api/post/delete-comment-post/${commentId}`,
+      withCredentials: true,
       data: { userId },
     })
       .then((res) => {
