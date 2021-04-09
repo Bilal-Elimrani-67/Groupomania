@@ -1,6 +1,5 @@
 // Fonction qui permet de traiter la date pour le profil de l'utilisateur
 export const dateParser = (num) => {
-  let options_day = {};
   let options = {
     hour: "2-digit",
     minute: "2-digit",
@@ -16,9 +15,10 @@ export const dateParser = (num) => {
   let date = new Date(timestamp).toLocaleDateString("fr-FR", options);
   // let date_day = new Date(timestamp).toLocaleDateString("fr-FR", options_day);
 
-  return date.toString(); //" à " + date_day.toString();
+  return date.toString();
 };
 
+// Fonction qui permet de traiter la date pour les commentaires
 export const timestampParser = (num) => {
   let options = {
     hour: "2-digit",

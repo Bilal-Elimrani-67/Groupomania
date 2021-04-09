@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../actions/post.actions";
-import Card from "./Card";
+import Card from "./Post/Card";
 import { isEmpty } from "./Utils";
 
 // Thread : Fil d'actualité
 const Thread = () => {
   const [loadPost, setLoadPost] = useState(true);
-  const [count, setCount] = useState(5);
+  const [count, setCount] = useState(5); // Compteur de post (5posts)
   const dispatch = useDispatch(); // Permet d'envoyer une action
   const posts = useSelector((state) => state.postReducer); // On se récupére tout les posts avec state.postReducer
 
@@ -31,6 +31,7 @@ const Thread = () => {
     return () => window.removeEventListener("scroll", loadMore);
   }, [loadPost, dispatch, count]);
 
+  // Ici qu'on map tout les post
   return (
     // Tout le fil d'actualité
     <div className="thread-container">

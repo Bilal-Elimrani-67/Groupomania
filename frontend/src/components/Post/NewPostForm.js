@@ -64,6 +64,7 @@ const NewPostForm = () => {
     handleVideo();
   }, [userData, message, video]);
 
+  // Logique pour poster (message,image,video)
   return (
     <div className="post-container">
       {isLoading ? (

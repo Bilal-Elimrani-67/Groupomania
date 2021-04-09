@@ -17,7 +17,7 @@ export const DELETE_COMMENT = "DELETE_COMMENT";
 // errors
 export const GET_POST_ERRORS = "GET_POST_ERRORS";
 
-// On se cherche tout les posts
+// On se récupère tout les posts
 export const getPosts = (num) => {
   return (dispatch) => {
     return axios

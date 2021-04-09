@@ -6,6 +6,7 @@ const DeleteCard = (props) => {
   const dispatch = useDispatch();
   const deleteQuote = () => dispatch(deletePost(props.id, props.author));
 
+  // Logique pour ce supprimer un post (message,image,video)
   return (
     <div
       onClick={() => {

@@ -11,8 +11,9 @@ const CardComments = ({ post }) => {
   const userData = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
 
+  // Pour s'envoyer le texte du commentaire
   const handleComment = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Tu nous changes pas de page
 
     if (text) {
       dispatch(addComment(post.id, userData.id, text, userData.pseudo))
@@ -21,6 +22,7 @@ const CardComments = ({ post }) => {
     }
   };
 
+  // Logique pour les commentaires
   return (
     <div className="comments-container">
       {post.comments.map((comment) => {
@@ -33,6 +35,7 @@ const CardComments = ({ post }) => {
             }
             key={comment.id}
           >
+            {/* PHOTO DE PROFIL DE CELUI QUI COMMENTE */}
             <div className="left-part">
               <img
                 src={
@@ -50,6 +53,7 @@ const CardComments = ({ post }) => {
                 alt="commenter-pic"
               />
             </div>
+            {/* PSEUDO ET DATE DE CELUI QUI COMMENTE */}
             <div className="right-part">
               <div className="comment-header">
                 <div className="pseudo">
@@ -67,6 +71,7 @@ const CardComments = ({ post }) => {
           </div>
         );
       })}
+      {/* FORMULAIRE POUR LAISSER UN COMMENTAIRE */}
       {userData.id && (
         <form action="" onSubmit={handleComment} className="comment-form">
           <input

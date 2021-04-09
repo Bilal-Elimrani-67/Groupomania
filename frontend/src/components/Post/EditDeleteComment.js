@@ -11,8 +11,9 @@ const EditDeleteComment = ({ comment, postId, user }) => {
   const uid = useContext(UidContext);
   const dispatch = useDispatch();
 
+  // Pour éditer
   const handleEdit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // On change pas de page
 
     if (text) {
       dispatch(editComment(comment.author, comment.id, text));
@@ -22,6 +23,7 @@ const EditDeleteComment = ({ comment, postId, user }) => {
     }
   };
 
+  // Pour supprimer un commentaire
   const handleDelete = () => {
     dispatch(deleteComment(comment.author, comment.id));
     window.location.reload(true);
@@ -34,14 +36,15 @@ const EditDeleteComment = ({ comment, postId, user }) => {
       }
     };
     const checkMod = () => {
-      if (user.permissions == 1) {
+      if (user.permissions === 1) {
         setIsMod(true);
       }
     };
     checkMod();
     checkAuthor();
-  }, [uid, comment.author, isMod]);
+  }, [uid, comment.author, user.permissions, isMod]);
 
+  //Logique pour éditer ou supprimer un commenatire
   return (
     <div className="edit-comment">
       {(isAuthor || isMod) && edit === false && (
@@ -49,12 +52,13 @@ const EditDeleteComment = ({ comment, postId, user }) => {
           <img src="./img/icons/edit.svg" alt="edit-comment" />
         </span>
       )}
+      {/* FORMULAIRE D'EDITION */}
       {(isAuthor || isMod) && edit && (
         <form action="" onSubmit={handleEdit} className="edit-comment-form">
           {isAuthor && (
             <>
               <label htmlFor="" onClick={() => setEdit(!edit)}>
-                Editer
+                Annuler
               </label>
               <br />
               <input
