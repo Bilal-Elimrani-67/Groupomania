@@ -6,6 +6,8 @@ import { updatePost } from "../../actions/post.actions";
 import DeleteCard from "./DeleteCard";
 import CardComments from "./CardComments"; // On s'importe CardComments
 
+// Component pour les post
+
 const Card = ({ post }) => {
   const [isLoading, setIsLoading] = useState(true); // Chargement du loading tant qu'on a pas la data
   const [isUpdated, setIsUpdated] = useState(false); // Pour modifier un texte
@@ -27,6 +29,7 @@ const Card = ({ post }) => {
     !isEmpty(usersData[0]) && setIsLoading(false);
   }, [usersData]);
 
+  // Rendu JSX
   return (
     <li className="card-container" key={post.id}>
       {isLoading ? (
@@ -83,14 +86,16 @@ const Card = ({ post }) => {
               ></iframe>
             )}
             {/* L'ID du Poster ID */}
-            {userData.id === post.author && (
-              <div className="button-container">
+            <div className="button-container">
+              {(userData.id === post.author || userData.permissions) && (
                 <div onClick={() => setIsUpdated(!isUpdated)}>
                   <img src="./img/icons/edit.svg" alt="edit" />
                 </div>
+              )}
+              {userData.permissions && (
                 <DeleteCard id={post.id} author={post.author} />
-              </div>
-            )}
+              )}
+            </div>
             {/* COMMENTER LES POSTS */}
             <div className="card-footer">
               <div className="comment-icon">

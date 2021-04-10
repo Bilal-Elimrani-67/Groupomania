@@ -4,6 +4,8 @@ import "reactjs-popup/dist/index.css";
 import { useDispatch } from "react-redux";
 import { likePost, unlikePost } from "../../actions/post.actions";
 
+// Components pour liker & unliker
+
 const LikeButton = ({ post }) => {
   let [liked, setLiked] = useState(false);
   const uid = useContext(UidContext);
@@ -32,6 +34,7 @@ const LikeButton = ({ post }) => {
     }
   }, [uid, post.likes, liked]);
 
+  // Rendu JSX
   return (
     <div className="like-container">
       {uid && liked === false && (

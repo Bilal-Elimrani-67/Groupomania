@@ -1,10 +1,20 @@
+const client = require("../config/sgbd");
+const mysql = require("mysql");
+let connection = client.client.getInstance();
+
 module.exports = class Like {
-  static create(callback, params) {
+  static create(params, res) {
     let sql = `INSERT INTO likes(author,post) VALUES(?,?)`;
-    callback(sql, params);
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      return res.status(200).json(result);
+    });
   }
-  static delete(callback, params) {
+  static delete(params, res) {
     let sql = `DELETE FROM likes WHERE author= ? AND post= ?`;
-    callback(sql, params);
+    connection.query(sql, params, (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      return res.status(200).json(result);
+    });
   }
 };

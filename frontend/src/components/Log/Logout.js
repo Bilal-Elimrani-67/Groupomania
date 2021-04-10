@@ -2,7 +2,8 @@ import React from "react"; // On s'importe React
 import axios from "axios"; // On s'importe Axios pour faire nos requêtes
 import cookie from "js-cookie"; // Pour traiter les cookies
 
-// Fonction pour se retirer le cookie
+// Component pour déconnecter l'utilisateur
+
 const Logout = () => {
   const removeCookie = (key) => {
     if (window !== "undefined") {
@@ -23,8 +24,9 @@ const Logout = () => {
     window.location = "/"; // Puis on retourne à la page d'accueil
   };
 
-  // Au clique on déclenche la fonction logout
+  // Rendu JSX
   return (
+    // Au clique on déclenche la fonction logout
     <li onClick={logout}>
       <img src="./img/icons/logout.svg" alt="logout" />
     </li>

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import SingInForm from "./SingInForm";
 
-// Pour l'inscription
+// Component pour enregistrer un utilisateur
+
 const SignUpForm = () => {
   const [formSubmit, setFormSubmit] = useState(false);
   const [pseudo, setPseudo] = useState("");
@@ -60,7 +61,7 @@ const SignUpForm = () => {
     }
   };
 
-  // C'est la qu'on se code le formulaire pour s'enregistrer
+  // Rendu JSX
   return (
     <>
       {formSubmit ? (

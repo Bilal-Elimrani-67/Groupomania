@@ -4,10 +4,14 @@ import { NavLink } from "react-router-dom"; // On s'importe NavLink
 import { UidContext } from "./AppContext";
 import Logout from "./Log/Logout"; // On s'importe notre Logout
 
+// Component Navbar
+
 const Navbar = () => {
   const uid = useContext(UidContext); // On se récupère au plus haut de notre appli notre uid
   const userData = useSelector((state) => state.userReducer); // On sélectionne le state de userReducer
   console.log(userData);
+
+  // Rendu JSX
   return (
     <nav>
       <div className="nav-container">

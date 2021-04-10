@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { deleteComment, editComment } from "../../actions/post.actions";
 import { UidContext } from "../AppContext";
 
+// Component pour éditer ou supprimer un commentaire
+
 const EditDeleteComment = ({ comment, postId, user }) => {
   const [isAuthor, setIsAuthor] = useState(false);
   const [isMod, setIsMod] = useState(false);
@@ -44,7 +46,7 @@ const EditDeleteComment = ({ comment, postId, user }) => {
     checkAuthor();
   }, [uid, comment.author, user.permissions, isMod]);
 
-  //Logique pour éditer ou supprimer un commenatire
+  // Rendu JSX
   return (
     <div className="edit-comment">
       {(isAuthor || isMod) && edit === false && (

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addComment, getPosts } from "../../actions/post.actions";
-
 import { isEmpty, timestampParser } from "../Utils";
-import EditDeleteComment from "./EditDeleteComment";
+import EditDeleteComment from "./EditDeleteComment"; // On s'importe EditDeleteComment
+
+// Component pour les commentaires
 
 const CardComments = ({ post }) => {
   const [text, setText] = useState("");
@@ -22,7 +23,7 @@ const CardComments = ({ post }) => {
     }
   };
 
-  // Logique pour les commentaires
+  // Rendu JSX
   return (
     <div className="comments-container">
       {post.comments.map((comment) => {

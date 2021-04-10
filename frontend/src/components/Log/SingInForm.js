@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios"; // On importe Axios pour faire des requêtes
 
-// Pour se connecter
+// Component pour connecter un utilisateur
+
 const SingInForm = () => {
   const [email, setEmail] = useState(""); // On utilise les hooks avec useState pour récup la data
   const [password, setPassword] = useState(""); // " "
@@ -35,8 +36,10 @@ const SingInForm = () => {
       });
   };
 
-  // C'est la qu'on se code le formulaire pour se connecter
+  //Rendu JSX
+
   return (
+    // C'est la qu'on se code le formulaire pour se connecter
     <form action="" onSubmit={handleLogin} id="sign-up-form">
       <label htmlFor="email">Email</label>
       <br />

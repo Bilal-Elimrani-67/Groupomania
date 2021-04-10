@@ -4,6 +4,8 @@ import { isEmpty, timestampParser } from "../Utils";
 import { NavLink } from "react-router-dom";
 import { addPost, getPosts } from "../../actions/post.actions";
 
+// Components pour poster (message,image,video)
+
 const NewPostForm = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -15,7 +17,11 @@ const NewPostForm = () => {
   const dispatch = useDispatch();
 
   const handlePost = async () => {
-    if (message || postPicture || video) {
+    if (
+      message !== undefined ||
+      postPicture !== undefined ||
+      video !== undefined
+    ) {
       const data = new FormData();
       data.append("posterId", userData.id);
       data.append("message", message);
@@ -30,6 +36,7 @@ const NewPostForm = () => {
     }
   };
 
+  // Intégrer une image
   const handlePicture = (e) => {
     setPostPicture(URL.createObjectURL(e.target.files[0]));
     setFile(e.target.files[0]);
@@ -46,6 +53,7 @@ const NewPostForm = () => {
   useEffect(() => {
     if (!isEmpty(userData)) setIsLoading(false);
 
+    // Intégrer une vidéo
     const handleVideo = () => {
       let findLink = message.split(" "); // Scinde une chaine de caractère
       for (let i = 0; i < findLink.length; i++) {
@@ -64,13 +72,14 @@ const NewPostForm = () => {
     handleVideo();
   }, [userData, message, video]);
 
-  // Logique pour poster (message,image,video)
+  // Rendu JSX
   return (
     <div className="post-container">
       {isLoading ? (
         <i className="fas fa-spinner fa-pulse"></i>
       ) : (
         <>
+          {/* PHOTO UTILISATEUR + LIEN DU PROFIL */}
           <NavLink exact to="/profil">
             <div className="user-info">
               <img
@@ -83,6 +92,7 @@ const NewPostForm = () => {
               />
             </div>
           </NavLink>
+          {/* TEXTAREA : QUOI DE NEUF ? */}
           <div className="post-form">
             <textarea
               name="message"
@@ -91,6 +101,7 @@ const NewPostForm = () => {
               onChange={(e) => setMessage(e.target.value)}
               value={message}
             />
+            {/* PREVISUALISATION DU POST */}
             {message || postPicture || video.length > 20 ? (
               <li className="card-container">
                 <div className="card-left">
@@ -126,6 +137,7 @@ const NewPostForm = () => {
                 </div>
               </li>
             ) : null}
+            {/* ICONE POUR METTRE UNE PHOTO DANS L'INPUT */}
             <div className="footer-form">
               <div className="icon">
                 {isEmpty(video) && (

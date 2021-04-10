@@ -28,11 +28,5 @@ module.exports.uploadProfil = async (req, res) => {
     fs.createWriteStream(`../frontend/public/uploads/profil/${fileName}`) //Dans ce chemin on créer le fichier
   );
   let parameters = ["./uploads/profil/" + fileName, res.locals.user.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      return res.status(200).json(result);
-    });
-  };
-  User.updateProfilPic(sql_request, parameters);
+  User.updateProfilPic(parameters, res);
 };

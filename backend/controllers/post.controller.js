@@ -10,13 +10,7 @@ const User = require("../models/user.models");
 let connection = client.client.getInstance();
 
 module.exports.getAllPost = (req, res) => {
-  let sql_request = (sql) => {
-    connection.query(sql, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      return res.status(200).json(result);
-    });
-  };
-  Post.fetch_all(sql_request);
+  Post.fetch_all(res);
 };
 
 // Créer un post
@@ -52,99 +46,47 @@ module.exports.createPost = async (req, res) => {
     res.locals.user.id,
     req.body.video,
   ];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      return res.status(200).json(result);
-    });
-  };
-  Post.create(sql_request, parameters);
+  Post.create(parameters, res);
 };
 
 // Modifier un post
 module.exports.updatePost = (req, res) => {
   let parameters = [req.body.message, req.params.id, res.locals.user.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      if (result.affectedRows < 1) return res.status(404).json(sql);
-      return res.status(200).json(result);
-    });
-  };
-  Post.update(sql_request, parameters);
+  Post.update(parameters, res);
 };
 
 // Supprimer un post
 module.exports.deletePost = (req, res) => {
-  let parameters = [req.params.id, res.locals.user.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      if (result.affectedRows < 1) return res.status(404).json(result);
-      return res.status(200).json(result);
-    });
-  };
-  Post.delete(sql_request, parameters);
+  let parameters = [req.params.id, res.locals.user.id, res.locals.user.id];
+  Post.delete(parameters, res);
 };
 
 // Aimer un post
 module.exports.likePost = async (req, res) => {
   let parameters = [res.locals.user.id, req.params.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      return res.status(200).json(result);
-    });
-  };
-  Like.create(sql_request, parameters);
+  Like.create(parameters, res);
 };
 
 // Ne plus aimer un post
 module.exports.unlikePost = async (req, res) => {
   let parameters = [res.locals.user.id, req.body.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      return res.status(200).json(result);
-    });
-  };
-  Like.delete(sql_request, parameters);
+  Like.delete(parameters, res);
 };
 
 // Pour commenter un post
 module.exports.commentPost = (req, res) => {
   let parameters = [req.body.text, res.locals.user.id, req.params.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      return res.status(200).json(result);
-    });
-  };
-  Comment.create(sql_request, parameters);
+  Comment.create(parameters, res);
 };
 
 // Pour éditer le commentaire un post
 module.exports.editCommentPost = (req, res) => {
   let parameters = [req.body.message, req.params.id, res.locals.user.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      if (result.affectedRows < 1) return res.status(404).json(result);
-      return res.status(200).json(result);
-    });
-  };
-  Comment.update(sql_request, parameters);
+  Comment.update(parameters, res);
 };
 
 // Pour supprimer le commentaire d'un post
 module.exports.deleteCommentPost = (req, res) => {
   let parameters = [req.params.id, res.locals.user.id, res.locals.user.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      if (result.affectedRows < 1) return res.status(404).json(result);
-      return res.status(200).json(result);
-    });
-  };
-  Comment.delete(sql_request, parameters);
+  Comment.delete(parameters, res);
 };

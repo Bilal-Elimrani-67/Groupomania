@@ -15,38 +15,21 @@ module.exports.getAllUsers = async (req, res) => {
 // Obtenir les infos d'un seul utilisateur
 module.exports.userInfo = (req, res) => {
   let parameters = [req.params.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      if (result == []) return res.status(404).json(result);
-      return res.status(200).json(result);
-    });
+  let next = (res, result) => {
+    if (result == []) return res.status(404).json(result);
+    return res.status(200).json(result);
   };
-  User.get(sql_request, parameters);
+  User.get(parameters, res, next);
 };
 
 // Modification d'un utilisateur
 module.exports.updateUser = async (req, res) => {
   let parameters = [req.body.bio, res.locals.user.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      if (result.affectedRows < 1) return res.status(404).json(result);
-      return res.status(200).json(result);
-    });
-  };
-  User.update(sql_request, parameters);
+  User.update(parameters, res);
 };
 
 // Suppression d'un utilisateur
 module.exports.deleteUser = async (req, res) => {
   let parameters = [res.locals.user.id];
-  let sql_request = (sql, params) => {
-    connection.query(sql, params, (errors, result, fields) => {
-      if (errors) return res.status(500).json(errors);
-      if (result.affectedRows < 1) return res.status(404).json(result);
-      return res.status(200).json(result);
-    });
-  };
-  User.delete(sql_request, parameters);
+  User.delete(parameters, res);
 };

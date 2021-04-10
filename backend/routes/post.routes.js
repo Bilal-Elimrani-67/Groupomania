@@ -8,7 +8,6 @@ const upload = multer();
 
 // Pour obtenir tout les posts
 router.get("/", postController.getAllPost);
-
 // Pour poster un message
 router.post(
   "/",

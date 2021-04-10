@@ -1,8 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-// Navigation à gauche (icons home & user)
+// Component navigation à gauche (icons home & user)
+
 const LeftNav = () => {
+  // Rendu JSX
   return (
     <div>
       <div className="left-nav-container">

@@ -13,7 +13,6 @@ export const dateParser = (num) => {
   let timestamp = Date.parse(num);
 
   let date = new Date(timestamp).toLocaleDateString("fr-FR", options);
-  // let date_day = new Date(timestamp).toLocaleDateString("fr-FR", options_day);
 
   return date.toString();
 };
