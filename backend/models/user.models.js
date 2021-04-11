@@ -22,24 +22,8 @@ module.exports = class User {
       return callback(res, result);
     });
   }
-  static getByPseudo(callback, params) {
-    let sql = `SELECT pseudo FROM users WHERE pseudo=?`;
-    callback(sql, params);
-  }
-  static getByEmail(callback, params) {
-    let sql = `SELECT * FROM users WHERE email=?`;
-    callback(sql, params);
-  }
-  static getByToken(callback, params) {
-    let sql = `SELECT id,token FROM users WHERE token LIKE ?`;
-    callback(sql, params);
-  }
-  static create(callback, params) {
-    let sql = `INSERT INTO users(pseudo, email, password) VALUES (?,?,?)`;
-    callback(sql, params);
-  }
   static update(params, res) {
-    let sql = `UPDATE users SET bio = ? WHERE id= ?`;
+    let sql = `EXECUTE update_users_bio using ? , ?`;
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);
       if (result.affectedRows < 1) return res.status(404).json(result);
@@ -47,18 +31,14 @@ module.exports = class User {
     });
   }
   static updateProfilPic(params, res) {
-    let sql = `UPDATE users SET profil_pic = ? WHERE id= ?`;
+    let sql = `EXECUTE update_users_pic using ? , ?`;
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);
       return res.status(200).json(result);
     });
   }
-  static addToken(callback, params) {
-    let sql = `UPDATE users SET token = ? WHERE id= ?`;
-    callback(sql, params);
-  }
   static delete(params, res) {
-    let sql = `DELETE FROM users WHERE id=?`;
+    let sql = `EXECUTE delete_users using ?`;
     connection.query(sql, params, (errors, result, fields) => {
       if (errors) return res.status(500).json(errors);
       if (result.affectedRows < 1) return res.status(404).json(result);
@@ -66,7 +46,7 @@ module.exports = class User {
     });
   }
   static deleteToken(params, res, callback) {
-    let sql = `UPDATE users SET token = NULL WHERE token= ?`;
+    let sql = `EXECUTE delete_token using ? `;
     connection.query(sql, params, (err, result, fields) => {
       if (err) return res.status(500).json(err);
       res.cookie("jwt", "", { maxAge: 1 }); // En milliseconde
@@ -74,7 +54,7 @@ module.exports = class User {
     });
   }
   static signUp(params, res) {
-    let sql = `SELECT pseudo FROM users WHERE pseudo=?`;
+    let sql = `EXECUTE get_user_by_pseudo using ?`;
     connection.query(sql, params[0], (err, result, fields) => {
       if (err) {
         if (err.errno == 1062) {
@@ -90,7 +70,7 @@ module.exports = class User {
         });
       }
 
-      sql = `SELECT * FROM users WHERE email=?`;
+      sql = `EXECUTE get_user_by_email using ?`;
       connection.query(sql, params[1], (err, result, fields) => {
         if (err) {
           return res.status(500).json(err);
@@ -104,7 +84,7 @@ module.exports = class User {
           });
         }
 
-        sql = `INSERT INTO users(pseudo, email, password) VALUES (?,?,?)`;
+        sql = `EXECUTE insert_user using ?,?,?`;
         connection.query(sql, params, (err, result, fields) => {
           if (err) {
             return res.status(500).json(err);
@@ -115,7 +95,7 @@ module.exports = class User {
     });
   }
   static signIn(params, res) {
-    let sql = `SELECT * FROM users WHERE email=?`;
+    let sql = `EXECUTE get_user_by_email using ?`;
     connection.query(sql, params[0], (err, result, fields) => {
       if (err) return res.status(500).json(err);
       if (!result[0]) {
@@ -130,7 +110,7 @@ module.exports = class User {
         if (results) {
           const uid = result[0].id;
           const token = createToken(result[0].id);
-          sql = `UPDATE users SET token = ? WHERE id= ?`;
+          sql = `EXECUTE set_token using ?, ?`;
           connection.query(sql, [token, uid], (err, result, fields) => {
             if (err) return res.status(500).json(err);
             res.cookie("jwt", token, { httpOnly: true, maxAge }); // Sécurité du cookie

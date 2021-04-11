@@ -4,6 +4,7 @@ import axios from "axios"; // On importe la bibliothèque Axios
 export const GET_POSTS = "GET_POSTS";
 export const GET_ALL_POSTS = "GET_ALL_POSTS";
 export const ADD_POSTS = "ADD_POSTS";
+export const COUNT_LIKES = "COUNT_LIKES";
 export const LIKE_POST = "LIKE_POST";
 export const UNLIKE_POST = "UNLIKE_POST";
 export const UPDATE_POST = "UPDATE_POST";
@@ -35,6 +36,19 @@ export const addPost = (data) => {
     return axios.post(`${process.env.REACT_APP_API_URL}api/post/`, data, {
       withCredentials: true,
     });
+  };
+};
+
+export const countLikes = (postId) => {
+  return (dispatch) => {
+    return axios({
+      method: "get",
+      url: `${process.env.REACT_APP_API_URL}api/post/likes/` + postId,
+    })
+      .then((res) => {
+        dispatch({ type: COUNT_LIKES, payload: res.data });
+      })
+      .catch((err) => console.log(err));
   };
 };
 

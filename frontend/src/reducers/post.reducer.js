@@ -14,7 +14,7 @@ const initialState = {};
 export default function postReducer(state = initialState, action) {
   switch (action.type) {
     // On traite GET_POSTS
-    case GET_POSTS:
+    case GET_POSTS: {
       let posts = [];
       const tmp_posts = action.payload;
       for (let i = 0; tmp_posts.length > i; i++) {
@@ -85,6 +85,7 @@ export default function postReducer(state = initialState, action) {
         posts.push(tmp);
       }
       return posts;
+    }
 
     // On traite LIKE_POST
     case LIKE_POST:
@@ -160,6 +161,7 @@ export default function postReducer(state = initialState, action) {
           };
         } else return post;
       });
+
     default:
       return state;
   }

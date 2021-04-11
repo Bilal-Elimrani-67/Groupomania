@@ -43,7 +43,7 @@ const LikeButton = ({ post }) => {
       {uid && liked && (
         <img src="./img/icons/heart-filled.svg" onClick={unlike} alt="unlike" />
       )}
-      {/* <span>{post.likes.length}</span> */}
+      {/* <span>{post.likes.lenght}</span> */}
     </div>
   );
 };

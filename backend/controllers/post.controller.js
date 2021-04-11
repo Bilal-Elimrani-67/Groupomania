@@ -61,6 +61,12 @@ module.exports.deletePost = (req, res) => {
   Post.delete(parameters, res);
 };
 
+// Compteur
+module.exports.countLikes = async (req, res) => {
+  let parameters = [req.params.id];
+  Like.count(parameters, res);
+};
+
 // Aimer un post
 module.exports.likePost = async (req, res) => {
   let parameters = [res.locals.user.id, req.params.id];
@@ -69,7 +75,7 @@ module.exports.likePost = async (req, res) => {
 
 // Ne plus aimer un post
 module.exports.unlikePost = async (req, res) => {
-  let parameters = [res.locals.user.id, req.body.id];
+  let parameters = [res.locals.user.id, req.params.id];
   Like.delete(parameters, res);
 };
 
