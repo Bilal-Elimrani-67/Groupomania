@@ -5,6 +5,8 @@ import UploadImg from "./UploadImg"; // On s'importe notre UploadImg
 import { updateBio } from "../../actions/user.actions";
 import { dateParser } from "../Utils";
 
+// Component pour mettre à jour sa bio
+
 const UpdateProfil = () => {
   const [bio, setBio] = useState("");
   const [updateForm, setUpdateForm] = useState(false);

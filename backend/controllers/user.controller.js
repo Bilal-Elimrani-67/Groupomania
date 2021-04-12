@@ -6,10 +6,7 @@ let connection = client.client.getInstance();
 
 // Obtenir tout les utilisateurs
 module.exports.getAllUsers = async (req, res) => {
-  connection.query("SELECT * FROM users;", (errors, result, fields) => {
-    if (errors) return res.status(500).json(errors);
-    return res.status(200).json(result);
-  });
+  User.fetch(null, res);
 };
 
 // Obtenir les infos d'un seul utilisateur

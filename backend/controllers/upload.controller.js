@@ -15,13 +15,11 @@ module.exports.uploadProfil = async (req, res) => {
       req.file.detectedMimeType != "image/jpeg"
     )
       throw Error("invalid file"); // On jete l'erreur
-
-    if (req.file.size > 500000) throw Error("max size"); // Ko
   } catch (err) {
     const errors = uploadErrors(err);
     return res.status(201).json({ errors });
   }
-  const fileName = req.body.name + ".jpg";
+  const fileName = req.body.name + req.file.clientReportedFileExtension;
 
   await pipeline(
     req.file.stream,

@@ -29,7 +29,7 @@ module.exports.checkUser = (req, res, next) => {
   }
 };
 
-// Controle si le token correspond à un user dans la BDD
+// Verifie que l'utilisateur est ben celui qu'il prétend être
 module.exports.requireAuth = (req, res, next) => {
   const token = req.cookies.jwt; // On se récupére le token
   if (token) {

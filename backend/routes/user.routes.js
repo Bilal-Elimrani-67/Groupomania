@@ -6,18 +6,18 @@ const uploadController = require("../controllers/upload.controller");
 const multer = require("multer"); // Pour traiter les images
 const upload = multer();
 
-// Router Authentification
+// Route Authentification
 router.post("/register", authController.signUp); // Pour enregistrer un utilisateur
 router.post("/login", authController.signIn); // Pour connecter un utilisateur
 router.get("/logout", authController.logout); // Pour déconnecter un utilisateur
 
-// Router Utilisateur(s)
+// Route Utilisateur(s)
 router.get("/", userController.getAllUsers);
 router.get("/:id", userController.userInfo); // :id => c'est un paramètre (req.params)
 router.put("/:id", checkUser, requireAuth, userController.updateUser);
 router.delete("/:id", checkUser, requireAuth, userController.deleteUser);
 
-// Router Téléchargement d'image
+// Route téléchargement image de profil
 router.post(
   "/upload",
   checkUser,

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadPicture, deleteProfil } from "../../actions/user.actions";
 
+// Component pour mettre sa photo de profil
+
 const UploadImg = () => {
   const [file, setFile] = useState();
   const dispatch = useDispatch();

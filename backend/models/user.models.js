@@ -14,6 +14,14 @@ const createToken = (id) => {
 };
 
 module.exports = class User {
+  // Pour obtenir toutes les infos
+  static fetch(params, res) {
+    connection.query("EXECUTE get_users ", (errors, result, fields) => {
+      if (errors) return res.status(500).json(errors);
+      return res.status(200).json(result);
+    });
+  }
+  // Pour obtenir l'info d'un utilisateur
   static get(params, res, callback) {
     let sql = `EXECUTE get_user_info using ?`;
     connection.query(sql, params, (errors, result, fields) => {
@@ -22,6 +30,7 @@ module.exports = class User {
       return callback(res, result);
     });
   }
+  // Pour modifier sa bio
   static update(params, res) {
     let sql = `EXECUTE update_users_bio using ? , ?`;
     connection.query(sql, params, (errors, result, fields) => {
@@ -30,6 +39,7 @@ module.exports = class User {
       return res.status(200).json(result);
     });
   }
+  // Pour modifier sa photo de profil
   static updateProfilPic(params, res) {
     let sql = `EXECUTE update_users_pic using ? , ?`;
     connection.query(sql, params, (errors, result, fields) => {
@@ -37,6 +47,7 @@ module.exports = class User {
       return res.status(200).json(result);
     });
   }
+  // Pour supprimer un utilisateur
   static delete(params, res) {
     let sql = `EXECUTE delete_users using ?`;
     connection.query(sql, params, (errors, result, fields) => {
@@ -45,6 +56,7 @@ module.exports = class User {
       return res.status(200).json(result);
     });
   }
+  // Pour se deconnecter
   static deleteToken(params, res, callback) {
     let sql = `EXECUTE delete_token using ? `;
     connection.query(sql, params, (err, result, fields) => {
@@ -53,6 +65,7 @@ module.exports = class User {
       return callback(res);
     });
   }
+  // Pour s'enregister
   static signUp(params, res) {
     let sql = `EXECUTE get_user_by_pseudo using ?`;
     connection.query(sql, params[0], (err, result, fields) => {
@@ -94,6 +107,7 @@ module.exports = class User {
       });
     });
   }
+  // Pour se connecter
   static signIn(params, res) {
     let sql = `EXECUTE get_user_by_email using ?`;
     connection.query(sql, params[0], (err, result, fields) => {

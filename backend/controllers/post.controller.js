@@ -9,6 +9,7 @@ const Like = require("../models/like.models");
 const User = require("../models/user.models");
 let connection = client.client.getInstance();
 
+// Pour obtenir tout les post
 module.exports.getAllPost = (req, res) => {
   Post.fetch_all(res);
 };
@@ -24,8 +25,6 @@ module.exports.createPost = async (req, res) => {
         req.file.detectedMimeType != "image/jpeg"
       )
         throw Error("invalid file");
-
-      if (req.file.size > 500000) throw Error("max size");
     } catch (err) {
       const errors = uploadErrors(err);
       return res.status(201).json({ errors });
@@ -40,6 +39,9 @@ module.exports.createPost = async (req, res) => {
     req.file !== null && req.file !== undefined
       ? "./uploads/posts/" + fileName
       : "";
+
+  if (res.locals.user == null)
+    return res.status(403).json("Utilisateur non valide");
   let parameters = [
     req.body.message,
     image_path,
@@ -59,12 +61,6 @@ module.exports.updatePost = (req, res) => {
 module.exports.deletePost = (req, res) => {
   let parameters = [req.params.id, res.locals.user.id, res.locals.user.id];
   Post.delete(parameters, res);
-};
-
-// Compteur
-module.exports.countLikes = async (req, res) => {
-  let parameters = [req.params.id];
-  Like.count(parameters, res);
 };
 
 // Aimer un post

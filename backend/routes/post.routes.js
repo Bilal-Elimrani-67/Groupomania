@@ -4,7 +4,7 @@ const postController = require("../controllers/post.controller");
 const multer = require("multer"); // Pour traiter les images
 const upload = multer();
 
-// Router Messages + Like & Unlike //
+// Route Messages + Like & Unlike //
 
 router.get("/", postController.getAllPost); // Pour obtenir tout les posts
 router.post(
@@ -14,8 +14,8 @@ router.post(
   upload.single("file"),
   postController.createPost
 ); // Pour poster un message
-router.put("/:id", checkUser, requireAuth, postController.updatePost); // Pour modifier le poste
-router.delete("/:id", checkUser, requireAuth, postController.deletePost); // Pour supprimer le poste
+router.put("/:id", checkUser, requireAuth, postController.updatePost); // Pour modifier le post
+router.delete("/:id", checkUser, requireAuth, postController.deletePost); // Pour supprimer le post
 router.patch("/like-post/:id", checkUser, requireAuth, postController.likePost); // Pour liker
 router.patch(
   "/unlike-post/:id",

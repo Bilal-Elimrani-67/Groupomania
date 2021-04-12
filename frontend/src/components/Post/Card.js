@@ -92,7 +92,7 @@ const Card = ({ post }) => {
                   <img src="./img/icons/edit.svg" alt="edit" />
                 </div>
               )}
-              {userData.permissions && (
+              {(userData.permissions || userData.id === post.author) && (
                 <DeleteCard id={post.id} author={post.author} />
               )}
             </div>
