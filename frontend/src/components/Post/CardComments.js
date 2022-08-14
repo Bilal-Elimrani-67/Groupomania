@@ -44,8 +44,8 @@ const CardComments = ({ post }) => {
                   usersData
                     .map((user) => {
                       if (user.id === comment.author)
-                        return user.profil_pic
-                          ? user.profil_pic
+                        return userData.profil_pic
+                          ? userData.profil_pic
                           : "./uploads/profil/random-user.png";
                       else return null;
                     })
